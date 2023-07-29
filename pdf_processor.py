@@ -177,9 +177,6 @@ class PDFViewer(tk.Tk):
                 self.org_entry.insert(tk.END, self.entity_org)
 
 
-
 if __name__ == "__main__":
     app = PDFViewer()
     app.mainloop()
-
-#commited
