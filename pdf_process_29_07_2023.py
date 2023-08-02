@@ -1,12 +1,13 @@
 from tkinter import *
 import tkinter as tk
-from tkinter import filedialog
+from tkinter import filedialog,ttk
 from PIL import Image, ImageTk
 import fitz
 from PIL import ImageTk
-import spacy
+from tkinter import messagebox
+# import spacy
 
-nlp = spacy.load("en_core_web_lg")
+# nlp = spacy.load("en_core_web_lg")
 
 
 class PDFViewer(tk.Tk):
@@ -17,6 +18,11 @@ class PDFViewer(tk.Tk):
         self.page_number = tk.StringVar()
 
         self.title("Prescription")
+
+        # self.style=ttk.Style(self)
+        # self.tk.call("source","forest-light.tcl")
+        # self.tk.call("source","forest-dark.tcl")
+
 
         self.canvas_left=tk.Canvas(self,bg='gray',width=400,height=710)
         self.canvas_left.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
@@ -49,6 +55,8 @@ class PDFViewer(tk.Tk):
 
         self.config(menu=self.menubar)
 
+        self.protocol("WM_DELETE_WINDOW", self.on_closing)
+
         self.buttons()
 
         self.windows_widgets()
@@ -56,6 +64,12 @@ class PDFViewer(tk.Tk):
         self.extract_text_show_entry()
 
         self.current_page_number()
+
+    # def toggle_mode(self):
+    #     if self.mode_switch.instate(['selected']):
+    #         self.style.theme_use('forest-light')
+    #     else:
+    #         self.style.theme_use('forest-dark')
 
     def go_to_page_number(self):
 
@@ -74,6 +88,9 @@ class PDFViewer(tk.Tk):
 
         self.next_button = tk.Button(self, text="Next Page", command=self.show_next_page)
         self.next_button.pack(pady=5)
+
+        # self.mode_switch=ttk.Checkbutton(self,text="Mode",style="Switch.TCheckbutton", command=self.toggle_mode)
+        # self.mode_switch.pack(pady=5)
 
         # self.process_button = tk.Button(self, text="Process", command=self.process)
         # self.process_button.pack(pady=10)
@@ -109,7 +126,7 @@ class PDFViewer(tk.Tk):
         self.current_page_label = tk.Label(self.canvas_right, text="Current Page")
         self.current_page_label.grid(row=8, column=0, padx=5, pady=5)
 
-        self.current_page_entry = tk.Entry(self.canvas_right ,textvariable=self.page_number)
+        self.current_page_entry = tk.Spinbox(self.canvas_right ,textvariable=self.page_number)
         self.current_page_entry.grid(row=8, column=1, padx=10, pady=10,sticky='nsw')
 
     def windows_widgets(self):
@@ -207,8 +224,12 @@ class PDFViewer(tk.Tk):
                 self.org_entry.delete('1.0', 'end')
                 self.org_entry.insert(tk.END, self.entity_org)
 
+    def on_closing(self):
+        if messagebox.askokcancel("Quit","Do you want to quit ?"):
+            self.destroy()
 
 
 if __name__ == "__main__":
     app = PDFViewer()
+
     app.mainloop()
