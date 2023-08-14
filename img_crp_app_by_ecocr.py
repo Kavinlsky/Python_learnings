@@ -1,10 +1,12 @@
 import tkinter as tk
 from tkinter import filedialog, messagebox
 from PIL import Image, ImageDraw, ImageTk
-import pytesseract
+# import pytesseract
+import easyocr
+reader=easyocr.Reader(['en'])
 
 
-pytesseract.pytesseract.tesseract_cmd = r"D:\KavinKumar-6204\Kavin-Python\Tesseract-OCR\tesseract.exe"
+# pytesseract.pytesseract.tesseract_cmd = r"D:\KavinKumar-6204\Kavin-Python\Tesseract-OCR\tesseract.exe"
 
 
 class ImageCropApp:
@@ -151,19 +153,23 @@ class ImageCropApp:
                     self.text_extraction(i,cropped_image)
 
     def text_extraction(self,i,image):
-        text = pytesseract.image_to_string(image)
-        if i==1:
-            self.name_entry.insert(tk.END, text)
-        elif i==2:
-            self.date_entry.insert(tk.END,text)
-        elif i==3:
-            self.org_entry.insert(tk.END,text)
-        elif i==4:
-            self.address_entry.insert(tk.END,text)
-        elif i ==5:
-            self.phone_entry.insert(tk.END,text)
-        elif i==6:
-            self.medicine_entry.insert(tk.END,text)
+        # text = pytesseract.image_to_string(image)
+        result = reader.readtext(image)
+
+        for detection in result:
+            text=detection[1]
+            if i==1:
+                self.name_entry.insert(tk.END, text)
+            elif i==2:
+                self.date_entry.insert(tk.END,text)
+            elif i==3:
+                self.org_entry.insert(tk.END,text)
+            elif i==4:
+                self.address_entry.insert(tk.END,text)
+            elif i ==5:
+                self.phone_entry.insert(tk.END,text)
+            elif i==6:
+                self.medicine_entry.insert(tk.END,text)
 
     def undo_del_rectangle(self):
         # rectangle remove code in below
