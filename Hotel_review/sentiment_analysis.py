@@ -33,10 +33,10 @@ Dependent_var = dataframe['Is_Response']
 
 IV_train, IV_test, DV_train, DV_test = train_test_split(Independent_var, Dependent_var, test_size = 0.1, random_state = 225)
 
-print('IV_train :', len(IV_train))
-print('IV_test :', len(IV_test))
-print('DV_train :', len(DV_train))
-print('DV_test:', len(DV_test))
+# print('IV_train :', len(IV_train))
+# print('IV_test :', len(IV_test))
+# print('DV_train :', len(DV_train))
+# print('DV_test:', len(DV_test))
 
 
 from sklearn.feature_extraction.text import TfidfVectorizer
@@ -60,14 +60,18 @@ predictions = model.predict(IV_test)
 
 confusion_matrix(predictions, DV_test)
 
-from sklearn.metrics import accuracy_score, precision_score, recall_score
-
-print("Accuracy : ", accuracy_score(predictions, DV_test))
-print("Precision : ", precision_score(predictions, DV_test, average = 'weighted'))
-print("Recall : ", recall_score(predictions, DV_test, average = 'weighted'))
 joblib.dump(model,"sentiment_analysis.joblib")
 
-example = [" "]
-result = model.predict(example)
+reviews = ["This cloth was average","Not fit for me","Some clothes are damaged"]
 
-print(result)
+result = model.predict(reviews)
+predicted_results=[]
+results=''.join(result)
+
+for i in range(0,len(results),8):
+    result=results[i:i+8]
+    predicted_results.append(result)
+
+for queries,prediction in zip(reviews,predicted_results):
+    print(queries,"-----",prediction)
+
